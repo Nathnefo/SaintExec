@@ -50,6 +50,12 @@ namespace ExLuaSRHV
 
         public static void Wait_for_game(Form1 form)
         {
+            string DllPath = System.IO.Directory.GetCurrentDirectory() + "\\SaintRowDLL.dll";
+            if (!System.IO.File.Exists(DllPath))
+            {
+                MessageBox.Show("HookLuaSr_hv.dll doesn't exist try to desactivate your antivirus");
+                return;
+            }
             form.Set_UI_state("WaitingProcess");
 
             Process[] ProcessArray = Process.GetProcessesByName("sr_hv");
@@ -81,12 +87,6 @@ namespace ExLuaSRHV
                 return;
             }
 
-            string DllPath = System.IO.Directory.GetCurrentDirectory() + "\\HookLuaSr_hv.dll";
-            if (!System.IO.File.Exists(DllPath))
-            {
-                MessageBox.Show("HookLuaSr_hv.dll doesn't exist try to desactivate your antivirus");
-                return;
-            }
 
             IntPtr allocMemAddress = VirtualAllocEx(procHandle, IntPtr.Zero, (uint)((DllPath.Length + 1) * Marshal.SizeOf(typeof(char))), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
             if (allocMemAddress == IntPtr.Zero)
