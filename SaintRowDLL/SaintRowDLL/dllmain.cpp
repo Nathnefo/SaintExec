@@ -73,6 +73,12 @@ functionh<lua_setfield_def> fsetfield;
 typedef __int64(__fastcall* lua_pcall_def)(lua_State* L, int nargs, int nresults, int msgh);
 functionh<lua_pcall_def> flua_pcall;
 
+typedef void(__fastcall* lua_destroy_state_def)(lua_State* L);
+functionh<lua_destroy_state_def> flua_destroy_state;
+
+typedef __int64(__fastcall* lua_get_current_thread_def)();
+functionh<lua_get_current_thread_def> flua_get_current_thread;
+
 // functions who just need to be call
 typedef __int64(__fastcall* lua_pushcclosure_def)(lua_State* L, lua_CFunction fn, int n);
 lua_pushcclosure_def  lua_pushcclosureOriginal = nullptr;
@@ -152,6 +158,30 @@ __int64 loadbuffer_d(lua_State* L, const char* buffer, size_t size, const char* 
     return floadbuffer.original(L, buffer, size, name);
 }
 
+__int64 last_thread;
+
+__int64 lua_get_current_thread_d()
+{
+    __int64 sret = flua_get_current_thread.original();
+    if (sret != 0) {
+        last_thread = sret;
+        return sret;
+    }
+    return last_thread; // force the game to return a thread otherwise it crashes
+}
+
+void lua_destroy_state_d(lua_State* L)
+{
+    if (L == L_interface) {
+        std::cout << "lua state Interface is destroyed" << std::endl;
+        L_interface = NULL;
+    }
+    else if (L == L_gameplay) {
+        std::cout << "lua state Gameplay is destroyed" << std::endl;
+        L_gameplay = NULL;
+    }
+    return flua_destroy_state.original(L);
+}
 /*
 __int64 lua_getfield_d(lua_State* L, __int64 idx, const char* k)
 {
@@ -168,31 +198,27 @@ void register_function(lua_State* L, lua_CFunction fn, std::string fn_name)
     }
 }
 
-bool firstsetfield_i = true;
-bool firstsetfield_g = true;
+
 __int64 lua_setfield_d(lua_State* L, int idx, const char* k)
 {
-    if (firstsetfield_i)
+    if (L_interface == NULL)
     {
         L_interface = sr_lua_get_state_by_nameOriginal("interface");
         if (L_interface != 0)
         {
 
             std::cout << "Lua state Interface : " << L_interface << std::endl;
-            firstsetfield_i = false;
-
             register_function(L_interface, &printc, "printc");
             register_function(L_interface, &sleepc, "sleepc");
         }
     }
-    if (firstsetfield_g)
+    if (L_gameplay == NULL)
     {
         L_gameplay = sr_lua_get_state_by_nameOriginal("game play");
 
         if (L_gameplay != 0)
         {
             std::cout << "Lua state Gameplay : " << L_gameplay << std::endl;
-            firstsetfield_g = false;
             register_function(L_gameplay, &printc, "printc");
             register_function(L_gameplay, &sleepc, "sleepc");
 
@@ -306,7 +332,7 @@ void execute_lua_file(lua_State* L, std::string L_name, std::string file_name)
 bool GetModuleInfo()
 {
     MODULEINFO modInfo = { 0 };
-    HMODULE hModulea = GetModuleHandle(L"sr_hv.exe");
+    HMODULE hModulea = GetModuleHandle(NULL);
     if (GetModuleInformation(GetCurrentProcess(), hModulea, &modInfo, sizeof(MODULEINFO)) == NULL)
     {
         return true;
@@ -346,11 +372,16 @@ void Initialize_Functions()
     fsetfield.create("lua_setfield", 0xCF9860, "\x75\x00\x49\x8B\xD2\x48\x8B\xCB\xE8\x00\x00\x00\x00\x4C\x8B\x4B\x10\x4C\x8D\x44\x24\x20\x49", "x?xxxxxxx????xxxxxxxxxx", -40, lua_setfield_d);
     floadbuffer.create("loadbuffer", 0xCFADD0, "\x48\x83\xEC\x00\x48\x89\x54\x24\x20\x48\x8D", "xxx?xxxxxxx", 0, loadbuffer_d);
     flua_pcall.create("lua_pcall", 0xCF9080, "\x48\x89\x5C\x24\x08\x57\x48\x83\xEC\x00\x41\x8B\xF8\x44", "xxxxxxxxx?xxxx", 0, lua_pcall_d);
+    flua_destroy_state.create("lua_destroy_state", 0x00000, "\x48\x85\xC9\x0F\x84\x00\x00\x00\x00\x56\x48\x83\xEC\x00\x48\x8B\x05\xCB", "xxxxx????xxxx?xxxx", 0, lua_destroy_state_d);
+    flua_get_current_thread.create("lua_get_current_thread", 0x00000, "\x8B\x0D\x00\x00\x00\x00\x8D\x41\xFF\x83\xF8\x00\x76", "xx????xxxxx?x", 0, lua_get_current_thread_d);
+
     //flua_getfield.create("lua_getfield", 0xCF8BB0, "\x48\x89\x5C\x24\x08\x57\x48\x83\xEC\x00\x4D\x8B", "xxxxxxxxx?xx", 0, lua_getfield_d);
 
     v_funcs.push_back(reinterpret_cast<uintptr_t*>(&fsetfield));
     v_funcs.push_back(reinterpret_cast<uintptr_t*>(&floadbuffer));
     v_funcs.push_back(reinterpret_cast<uintptr_t*>(&flua_pcall));
+    v_funcs.push_back(reinterpret_cast<uintptr_t*>(&flua_destroy_state));
+    v_funcs.push_back(reinterpret_cast<uintptr_t*>(&flua_get_current_thread));
     //v_funcs.push_back(reinterpret_cast<uintptr_t*>(&flua_getfield));;
 }
 
@@ -509,7 +540,7 @@ DWORD WINAPI Menue(HINSTANCE hModule) {
     if (status != MH_OK)
     {
         std::string sStatus = MH_StatusToString(status);
-        shutdown(fp, "Minhook init failed!");
+        shutdown(fp, "Minhook init failed : " + sStatus);
         return 0;
     }
 
