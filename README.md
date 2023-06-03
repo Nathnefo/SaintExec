@@ -8,29 +8,26 @@ Epic games Version : **Working**.\
 Steam Version : **Untested**. (contact me on discord Nathnéfo#4261)
 
 ## How to use
-Download the lastest release. **Open the injector before lauching the game**,  choose gameplay or interface (gameplay can only be executed in-game !) and execute the script. \
+Download the lastest release. **Open the injector before lauching the game**,  choose gameplay or interface (gameplay can only be executed in-game !) and execute the script.
 
 ## How to create a script ?
 I will post a tutorial on [saintsrowmods.com](https://www.saintsrowmods.com).\
 To wait, here is a little script to inject into Gameplay (It makes your car invulnerable !): 
 
-    while true do
-      local chr = get_char_vehicle_name(LOCAL_PLAYER)
-      if chr ~= "" then
-        vehicle_set_invulnerable(chr)
-      end
-      sleepc(1000)
+    function make_invulnerable(player_name, vehicle_name, i)
+        vehicle_set_invulnerable(vehicle_name)
     end
 
-## Known Issues
-- Callback functions like *on_vehicle_enter* crash the game.
-- When you go in-game, in the main menu and in-game again the injector don't work.
-- Crash when calling *printc* too many times.
+    on_vehicle_enter("make_invulnerable", LOCAL_PLAYER)
+
+## Known Issue
+- Crash when calling *printc* too many times (Add a delay between with sleepc).
 
 ## Roadmap
 
-- [ ] Repair Issues.
+- [X] Repair Issues.
 - [ ] Add the ability to dump lua scripts.
+- [ ] Make a tutorial.
 - [ ] Make a Hook function inside lua.
 
 ## Credit
