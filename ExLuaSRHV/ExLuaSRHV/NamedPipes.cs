@@ -42,20 +42,10 @@ namespace ExLuaSRHV
         }
 
         //lua pipe function
-        public static void LuaPipe(string script, int Lua_state)
+        public static bool LuaPipe(string script, string header)
         {
-            if (Lua_state == 0)
-            {
-                script = ".GAMEPLAY" + script;
-            }
-            else if(Lua_state == 1)
-            {
-                script = ".INTERFAC" + script;
-            }
-            else if(Lua_state == 2)
-            {
-                script = ".HOOKSTOP";
-            }
+                
+            script = header + script;
 
             if (NamedPipeExist(luapipename))
             {
@@ -89,9 +79,10 @@ namespace ExLuaSRHV
             }
             else
             {
-                MessageBox.Show("Inject DLL before Using this!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
+                //MessageBox.Show("Inject DLL before Using this!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return true;
             }
+            return false;
         }
     }
 }

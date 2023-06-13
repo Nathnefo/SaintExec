@@ -585,6 +585,14 @@ DWORD WINAPI Menue(HINSTANCE hModule) {
             {
                 running = false;
             }
+            else if (strcmp(header, ".DUMPLUAT") == 0)
+            {
+                DUMP_LUA = true;
+            }
+            else if(strcmp(header, ".DUMPLUAF") == 0)
+            {
+                DUMP_LUA = false;
+            }
             else if (strcmp(header, ".INTERFAC") == 0)
             {
                 // setup args

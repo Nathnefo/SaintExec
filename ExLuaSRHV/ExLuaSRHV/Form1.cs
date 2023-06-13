@@ -6,6 +6,8 @@ namespace ExLuaSRHV
     public partial class Form1 : MaterialForm
     {
         public bool Closing = false;
+
+        public bool DumpLua = false;
         public Form1()
         {
             InitializeComponent();
@@ -47,11 +49,11 @@ namespace ExLuaSRHV
             var script = materialMultiLineTextBox1.Text;
             if(Gameplay_RadioButton.Checked)
             {
-                NamedPipes.LuaPipe(script, 0);
+                NamedPipes.LuaPipe(script, ".GAMEPLAY");
             }
             else
             {
-                NamedPipes.LuaPipe(script, 1);
+                NamedPipes.LuaPipe(script, ".INTERFAC");
             }
 
 
@@ -60,7 +62,7 @@ namespace ExLuaSRHV
         private void materialButton2_Click(object sender, EventArgs e)
         {
 
-            NamedPipes.LuaPipe(".HOOKSTOP", 2);
+            NamedPipes.LuaPipe("", ".HOOKSTOP");
             Injector.DLLINJECTED = false;
             Set_UI_state("Detach");
 
@@ -117,7 +119,7 @@ namespace ExLuaSRHV
             Closing = true;
             if(Injector.DLLINJECTED)
             {
-                NamedPipes.LuaPipe(".HOOKSTOP", 2);
+                NamedPipes.LuaPipe("", ".HOOKSTOP");
                 Injector.DLLINJECTED = false;
             }
         }
@@ -129,34 +131,38 @@ namespace ExLuaSRHV
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            MessageBox.Show("SHESHHHHH");
-            if (e.KeyCode == Keys.F1)
-            {
-                var script = materialMultiLineTextBox1.Text;
-                if (Gameplay_RadioButton.Checked)
-                {
-                    NamedPipes.LuaPipe(script, 0);
-                }
-                else
-                {
-                    NamedPipes.LuaPipe(script, 1);
-                }
-            }
+
         }
 
         private void Form1_KeyDown(object sender, KeyPressEventArgs e)
         {
-            MessageBox.Show("SHESHHHHH");
+
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            MessageBox.Show("SHESHHHHH");
+
         }
 
         private void Form1_KeyUp(object sender, EventArgs e)
         {
-            MessageBox.Show("SHESHHHHH");
+
+        }
+
+        private void materialCheckbox2_CheckedChanged(object sender, EventArgs e)
+        {
+            DumpLua = !DumpLua;
+            if (Injector.DLLINJECTED)
+            {
+                if (DumpLua)
+                {
+                    NamedPipes.LuaPipe("", ".DUMPLUAT");
+                }
+                else
+                {
+                    NamedPipes.LuaPipe("", ".DUMPLUAF");
+                }
+            }
         }
     }
 }

@@ -30,6 +30,7 @@
         {
             this.materialTabControl1 = new MaterialSkin.Controls.MaterialTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.materialCheckbox2 = new MaterialSkin.Controls.MaterialCheckbox();
             this.Interface_RadioButton = new MaterialSkin.Controls.MaterialRadioButton();
             this.Gameplay_RadioButton = new MaterialSkin.Controls.MaterialRadioButton();
             this.label2 = new System.Windows.Forms.Label();
@@ -57,6 +58,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.materialCheckbox2);
             this.tabPage1.Controls.Add(this.Interface_RadioButton);
             this.tabPage1.Controls.Add(this.Gameplay_RadioButton);
             this.tabPage1.Controls.Add(this.label2);
@@ -73,11 +75,28 @@
             this.tabPage1.Text = "Home";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // materialCheckbox2
+            // 
+            this.materialCheckbox2.AutoSize = true;
+            this.materialCheckbox2.Depth = 0;
+            this.materialCheckbox2.Location = new System.Drawing.Point(589, 111);
+            this.materialCheckbox2.Margin = new System.Windows.Forms.Padding(0);
+            this.materialCheckbox2.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.materialCheckbox2.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialCheckbox2.Name = "materialCheckbox2";
+            this.materialCheckbox2.ReadOnly = false;
+            this.materialCheckbox2.Ripple = true;
+            this.materialCheckbox2.Size = new System.Drawing.Size(143, 37);
+            this.materialCheckbox2.TabIndex = 10;
+            this.materialCheckbox2.Text = "Dump Lua files";
+            this.materialCheckbox2.UseVisualStyleBackColor = true;
+            this.materialCheckbox2.CheckedChanged += new System.EventHandler(this.materialCheckbox2_CheckedChanged);
+            // 
             // Interface_RadioButton
             // 
             this.Interface_RadioButton.AutoSize = true;
             this.Interface_RadioButton.Depth = 0;
-            this.Interface_RadioButton.Location = new System.Drawing.Point(564, 99);
+            this.Interface_RadioButton.Location = new System.Drawing.Point(610, 65);
             this.Interface_RadioButton.Margin = new System.Windows.Forms.Padding(0);
             this.Interface_RadioButton.MouseLocation = new System.Drawing.Point(-1, -1);
             this.Interface_RadioButton.MouseState = MaterialSkin.MouseState.HOVER;
@@ -94,7 +113,7 @@
             this.Gameplay_RadioButton.AutoSize = true;
             this.Gameplay_RadioButton.Checked = true;
             this.Gameplay_RadioButton.Depth = 0;
-            this.Gameplay_RadioButton.Location = new System.Drawing.Point(564, 53);
+            this.Gameplay_RadioButton.Location = new System.Drawing.Point(610, 28);
             this.Gameplay_RadioButton.Margin = new System.Windows.Forms.Padding(0);
             this.Gameplay_RadioButton.MouseLocation = new System.Drawing.Point(-1, -1);
             this.Gameplay_RadioButton.MouseState = MaterialSkin.MouseState.HOVER;
@@ -245,5 +264,6 @@
         private Label label2;
         private MaterialSkin.Controls.MaterialRadioButton Gameplay_RadioButton;
         private MaterialSkin.Controls.MaterialRadioButton Interface_RadioButton;
+        private MaterialSkin.Controls.MaterialCheckbox materialCheckbox2;
     }
 }

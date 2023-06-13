@@ -48,6 +48,8 @@ namespace ExLuaSRHV
 
         public static bool DLLINJECTED = false;
 
+        const string ProcessName = "sr_hv";
+
         public static void Wait_for_game(Form1 form)
         {
             string DllPath = System.IO.Directory.GetCurrentDirectory() + "\\SaintRowDLL.dll";
@@ -58,11 +60,11 @@ namespace ExLuaSRHV
             }
             form.Set_UI_state("WaitingProcess");
 
-            Process[] ProcessArray = Process.GetProcessesByName("sr_hv");
+            Process[] ProcessArray = Process.GetProcessesByName(ProcessName);
             while (ProcessArray.Length == 0)
             {
                 Thread.Sleep(200);
-                ProcessArray = Process.GetProcessesByName("sr_hv");
+                ProcessArray = Process.GetProcessesByName(ProcessName);
                 if (form.Closing)
                 {
                     return;
@@ -113,11 +115,22 @@ namespace ExLuaSRHV
 
             DLLINJECTED = true;
             form.Set_UI_state("Attach");
-
+            if (form.DumpLua)
+            {
+                bool state = true;
+                while (state)
+                {
+                    state = NamedPipes.LuaPipe("", ".DUMPLUAT"); // while pipe return an error retry (the pipe is not setup yet)
+                    if (form.Closing)
+                    {
+                        return;
+                    }
+                }
+            } 
             while (ProcessArray.Length > 0)
             {
                 Thread.Sleep(200);
-                ProcessArray = Process.GetProcessesByName("sr_hv");
+                ProcessArray = Process.GetProcessesByName(ProcessName);
                 if (form.Closing)
                 {
                     return;
