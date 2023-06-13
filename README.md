@@ -26,7 +26,7 @@ To wait, here is a little script to inject into Gameplay (It makes your car invu
 ## Roadmap
 
 - [X] Repair Issues.
-- [ ] Add the ability to dump lua scripts.
+- [X] Add the ability to dump lua scripts.
 - [ ] Make a tutorial.
 - [ ] Make a Hook function inside lua.
 
