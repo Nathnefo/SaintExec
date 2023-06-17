@@ -11,8 +11,8 @@ Steam Version : **Untested**. (contact me on discord Nathnéfo#4261)
 Download the lastest release. **Open the injector before lauching the game**,  choose gameplay or interface (gameplay can only be executed in-game !) and execute the script.
 
 ## How to create a script ?
-I will post a tutorial on [saintsrowmods.com](https://www.saintsrowmods.com).\
-To wait, here is a little script to inject into Gameplay (It makes your car invulnerable !): 
+A post on saintsrowmods explain everything : [https://www.saintsrowmods.com/forum/threads/how-to-create-a-lua-script-for-saintexec.20376/](https://www.saintsrowmods.com/forum/threads/how-to-create-a-lua-script-for-saintexec.20376/).\
+Example script to inject into Gameplay (It makes your car invulnerable !): 
 
     function make_invulnerable(player_name, vehicle_name, i)
         vehicle_set_invulnerable(vehicle_name)
@@ -27,7 +27,7 @@ To wait, here is a little script to inject into Gameplay (It makes your car invu
 
 - [X] Repair Issues.
 - [X] Add the ability to dump lua scripts.
-- [ ] Make a tutorial.
+- [X] Make a tutorial.
 - [ ] Make a Hook function inside lua.
 
 ## Credit
